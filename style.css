@@ -1,422 +1,446 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Poppins,sans-serif;
+/* ============================================================
+   Tokens
+============================================================ */
+
+:root {
+    --ink: #211a14;
+    --ink-soft: #5a4f3d;
+    --parchment: #f4eede;
+    --parchment-deep: #e9dfc4;
+    --card-bg: #fbf8f0;
+    --gold: #a9803f;
+    --gold-light: #cea766;
+    --wine: #7c3626;
+    --line: #ddccA0;
+
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Inter", system-ui, sans-serif;
 }
 
-html{
-    scroll-behavior:smooth;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
+html {
+    scroll-behavior: smooth;
+}
 
+@media (prefers-reduced-motion:reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    * {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--ink);
     background:
-    radial-gradient(circle at top left,#60a5fa33,transparent 35%),
-    radial-gradient(circle at bottom right,#2563eb22,transparent 35%),
-    #eef3ff;
-
-    overflow-x:hidden;
-
+        radial-gradient(circle at 12% 8%, #ffffff55, transparent 40%),
+        radial-gradient(circle at 88% 92%, #ffffff40, transparent 45%),
+        var(--parchment);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
-/*==========================
-        ENCABEZADO
-==========================*/
-
-header{
-
-    background:linear-gradient(135deg,#0f172a,#2563eb);
-
-    color:white;
-
-    padding:70px 20px;
-
-    text-align:center;
-
-    position:relative;
-
-    overflow:hidden;
-
+a {
+    color: inherit;
 }
 
-header::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:400px;
-    height:400px;
-
-    background:rgba(255,255,255,.08);
-
-    border-radius:50%;
-
-    top:-180px;
-    left:-150px;
-
-    filter:blur(20px);
-
+::selection {
+    background: var(--gold-light);
+    color: var(--ink);
 }
 
-header::after{
+/* ============================================================
+   Barra de progreso de lectura (fija en el borde izquierdo)
+============================================================ */
 
-    content:"";
-
-    position:absolute;
-
-    width:350px;
-    height:350px;
-
-    background:rgba(255,255,255,.05);
-
-    border-radius:50%;
-
-    bottom:-180px;
-    right:-120px;
-
-    filter:blur(20px);
-
+.spine-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100vh;
+    background: var(--parchment-deep);
+    z-index: 50;
 }
 
-header h1{
-
-    font-size:3rem;
-
-    margin-bottom:15px;
-
-    animation:fadeDown 1s;
-
+.spine-progress span {
+    display: block;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to bottom, var(--gold-light), var(--wine));
+    transition: height .1s linear;
 }
 
-header p{
+/* ============================================================
+   Encabezado
+============================================================ */
 
-    font-size:1.1rem;
-
-    opacity:.95;
-
-    animation:fadeUp 1.3s;
-
+header {
+    position: relative;
+    padding: 110px 24px 90px;
+    text-align: center;
+    background:
+        linear-gradient(180deg, var(--parchment) 0%, var(--parchment) 60%, var(--parchment-deep) 100%);
+    overflow: hidden;
 }
 
-/*==========================
-      LINEA DEL TIEMPO
-==========================*/
-
-.timeline{
-
-    width:90%;
-
-    max-width:1200px;
-
-    margin:auto;
-
-    position:relative;
-
-    padding:70px 0;
-
+header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(90deg, transparent 0 39px, #00000006 39px 40px);
+    pointer-events: none;
 }
 
-.timeline::before{
-
-    content:"";
-
-    position:absolute;
-
-    left:50%;
-
-    width:6px;
-
-    height:100%;
-
-    background:linear-gradient(to bottom,#2563eb,#60a5fa,#2563eb);
-
-    transform:translateX(-50%);
-
-    border-radius:20px;
-
-    box-shadow:
-    0 0 15px #60a5fa,
-    0 0 35px #60a5fa88;
-
+.eyebrow {
+    font-family: var(--font-body);
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--wine);
+    margin-bottom: 22px;
+    animation: fadeUp .7s both;
 }
 
-/*==========================
-        TARJETAS
-==========================*/
-
-.card{
-
-    width:45%;
-
-    background:rgba(255,255,255,.72);
-
-    backdrop-filter:blur(16px);
-
-    border:1px solid rgba(255,255,255,.5);
-
-    padding:20px;
-
-    border-radius:20px;
-
-    box-shadow:
-    0 20px 45px rgba(0,0,0,.12);
-
-    margin:40px 0;
-
-    position:relative;
-
-    opacity:0;
-
-    transform:translateY(50px);
-
-    transition:
-    transform .45s,
-    box-shadow .45s;
-
+header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    line-height: 1.08;
+    letter-spacing: -.01em;
+    max-width: 16ch;
+    margin: 0 auto 28px;
+    animation: fadeUp .9s both .05s;
 }
 
-.card.show{
-
-    opacity:1;
-
-    transform:translateY(0);
-
+.lede {
+    font-size: 1.08rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin: 0 auto 46px;
+    animation: fadeUp 1.05s both .1s;
 }
 
-.card:hover{
-
-    transform:translateY(-10px) scale(1.02);
-
-    box-shadow:
-    0 30px 60px rgba(0,0,0,.18);
-
+.scroll-cue {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--wine);
+    font-family: var(--font-body);
+    font-size: .82rem;
+    font-weight: 500;
+    letter-spacing: .04em;
+    animation: fadeUp 1.2s both .15s;
 }
 
-/*==========================
-      CIRCULO AZUL
-==========================*/
-
-.card::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:22px;
-    height:22px;
-
-    background:#2563eb;
-
-    border-radius:50%;
-
-    top:45px;
-
-    box-shadow:
-
-    0 0 15px #60a5fa,
-
-    0 0 30px #60a5fa;
-
+.scroll-cue svg {
+    animation: nudge 1.8s ease-in-out infinite;
 }
 
-.left::before{
+/* ============================================================
+   Columna central del recorrido
+============================================================ */
 
-    right:-57px;
-
+.timeline {
+    width: 92%;
+    max-width: 1160px;
+    margin: auto;
+    position: relative;
+    padding: 30px 0 100px;
 }
 
-.right::before{
-
-    left:-57px;
-
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background:
+        repeating-linear-gradient(to bottom, var(--gold) 0 8px, transparent 8px 16px);
+    transform: translateX(-50%);
 }
 
-/*==========================
-        IMAGEN
-==========================*/
+/* ============================================================
+   Divisores de era
+============================================================ */
 
-.card img{
-
-    width:100%;
-
-    max-height:350px;
-
-    height:auto;
-
-    object-fit:contain;
-
-    background:#f7f7f7;
-
-    padding:10px;
-
-    border-radius:12px;
-
-    margin-bottom:18px;
-
-    transition:.5s;
-
+.era-marker {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 74px 0 46px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
 }
 
-.card:hover img{
-
-    transform:scale(1.05);
-
+.era-marker.show {
+    opacity: 1;
+    transform: none;
 }
 
-/*==========================
-      POSICION TARJETAS
-==========================*/
-
-.left{
-
-    left:0;
-
+.era-marker__dot {
+    display: none;
 }
 
-.right{
-
-    left:55%;
-
+.era-marker__label {
+    position: relative;
+    z-index: 2;
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 12px 30px;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    box-shadow: 0 12px 30px -10px rgba(33, 26, 20, .45);
 }
 
-/*==========================
-          TEXTOS
-==========================*/
-
-.date{
-
-    color:#2563eb;
-
-    font-weight:700;
-
-    margin-bottom:12px;
-
-    font-size:15px;
-
+.era-marker__name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.15rem;
+    font-weight: 500;
 }
 
-h2{
-
-    margin-bottom:10px;
-
-    font-size:2rem;
-
-    color:#0f172a;
-
+.era-marker__range {
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--gold-light);
 }
 
-h3{
+/* ============================================================
+   Tarjetas
+============================================================ */
 
-    margin-bottom:10px;
-
-    color:#1e3a8a;
-
+.card {
+    width: 44%;
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    padding: 28px 30px 32px;
+    margin: 0 0 52px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity .55s ease, transform .55s ease, box-shadow .35s ease;
+    box-shadow: 0 1px 0 var(--line);
 }
 
-p{
-
-    line-height:1.6;
-
+.card.show {
+    opacity: 1;
+    transform: none;
 }
 
-.idea{
-
-    margin-top:18px;
-
-    padding:14px;
-
-    background:#dbeafe;
-
-    border-left:5px solid #2563eb;
-
-    border-radius:10px;
-
-    transition:.3s;
-
+.card:hover {
+    box-shadow: 0 24px 40px -22px rgba(33, 26, 20, .35);
 }
 
-.card:hover .idea{
-
-    background:#c7ddff;
-
+.card.left {
+    margin-right: auto;
 }
 
-/*==========================
-      ANIMACIONES
-==========================*/
+.card.right {
+    margin-left: auto;
+}
 
-@keyframes fadeDown{
+/* marcador dorado que toca la columna central */
+.card::after {
+    content: "";
+    position: absolute;
+    top: 36px;
+    width: 11px;
+    height: 11px;
+    background: var(--parchment);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+}
 
-    from{
+.card.left::after {
+    right: -36px;
+}
 
-        opacity:0;
+.card.right::after {
+    left: -36px;
+}
 
-        transform:translateY(-40px);
+.card__media {
+    width: 100%;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: var(--parchment-deep);
+    filter: sepia(.18) contrast(1.03);
+}
 
+.card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .6s ease;
+}
+
+.card:hover .card__media img {
+    transform: scale(1.045);
+}
+
+.date {
+    font-family: var(--font-body);
+    font-size: .74rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--wine);
+    margin-bottom: 10px;
+}
+
+.card h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.68rem;
+    line-height: 1.18;
+    color: var(--ink);
+    margin-bottom: 4px;
+}
+
+.card h3 {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: .92rem;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+}
+
+.card p {
+    line-height: 1.65;
+    color: var(--ink-soft);
+    font-size: .98rem;
+}
+
+.idea {
+    margin-top: 20px;
+    padding: 16px 18px 16px 20px;
+    background: transparent;
+    border-left: 2px solid var(--gold);
+}
+
+.idea__label {
+    display: block;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+}
+
+.idea p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: var(--ink);
+}
+
+/* ============================================================
+   Pie de página
+============================================================ */
+
+footer {
+    text-align: center;
+    padding: 36px 20px 50px;
+    font-size: .8rem;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+}
+
+/* ============================================================
+   Animaciones
+============================================================ */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
     }
 
-    to{
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
 
-        opacity:1;
+@keyframes nudge {
 
-        transform:none;
-
+    0%,
+    100% {
+        transform: translateY(0);
     }
 
+    50% {
+        transform: translateY(6px);
+    }
 }
 
-@keyframes fadeUp{
+/* ============================================================
+   Responsivo
+============================================================ */
 
-    from{
+@media (max-width:860px) {
 
-        opacity:0;
-
-        transform:translateY(40px);
-
+    .spine-progress {
+        width: 3px;
     }
 
-    to{
-
-        opacity:1;
-
-        transform:none;
-
+    header {
+        padding: 90px 20px 64px;
     }
 
+    .timeline::before {
+        left: 18px;
+    }
+
+    .card {
+        width: calc(100% - 40px);
+        margin-left: 40px !important;
+        margin-right: 0 !important;
+    }
+
+    .card.left::after,
+    .card.right::after {
+        left: -30px;
+        right: auto;
+    }
+
+    .era-marker {
+        margin: 56px 0 34px;
+        padding-left: 40px;
+    }
 }
 
-/*==========================
-      RESPONSIVE
-==========================*/
+@media (max-width:480px) {
+    .card {
+        padding: 22px 20px 26px;
+    }
 
-@media(max-width:900px){
-
-.timeline::before{
-
-    left:20px;
-
-}
-
-.card{
-
-    width:calc(100% - 60px);
-
-    left:40px!important;
-
-}
-
-.card::before{
-
-    left:-32px;
-
-}
-
-header h1{
-
-    font-size:2.2rem;
-
-}
-
+    header h1 {
+        font-size: 2.1rem;
+    }
 }
